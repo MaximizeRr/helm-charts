@@ -170,6 +170,9 @@ metadata:
   name: {{ include "kestra.fullname" $merged }}
   labels:
     {{- include "kestra.labels" $merged | nindent 4 }}
+  {{- with $deployment.labels }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with $.Values.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -190,7 +193,6 @@ spec:
     metadata:
       labels:
         {{- include "kestra.selectorsLabels" $merged | nindent 8 }}
-
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/secret.yaml") $ | sha256sum }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
